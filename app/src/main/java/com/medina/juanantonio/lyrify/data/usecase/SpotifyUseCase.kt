@@ -23,7 +23,7 @@ class SpotifyUseCase @Inject constructor(
 
     companion object {
         const val REQUEST_CODE = 1337
-        const val REDIRECT_URL = "lyrify://callback"
+        const val REDIRECT_URL = "lyrify://callback/" // ✅ Updated with trailing slash
     }
 
     fun authenticate(activity: Activity, externalBrowser: Boolean = true): String {
@@ -31,7 +31,7 @@ class SpotifyUseCase @Inject constructor(
             val state = Random.nextInt(100000, 999999).toString()
             val builder = AuthorizationRequest.Builder(
                 spotifyManager.clientId,
-                AuthorizationResponse.Type.CODE,
+                AuthorizationResponse.Type.TOKEN, // ✅ Changed from CODE to TOKEN
                 REDIRECT_URL
             ).setScopes(arrayOf("user-read-playback-state", "user-modify-playback-state"))
                 .setState(state)
@@ -116,5 +116,4 @@ class SpotifyUseCase @Inject constructor(
         val token = dataStoreManager.getString(SPOTIFY_ACCESS_TOKEN)
         spotifyManager.pause(token)
     }
-
 }
