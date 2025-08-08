@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_UP
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.medina.juanantonio.lyrify.data.usecase.SpotifyUseCase
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.data?.let {
+            // Debug: Show the redirect URI
+            Toast.makeText(this, "Redirect URI: $it", Toast.LENGTH_LONG).show()
+
             val response = AuthorizationResponse.fromUri(it)
             viewModel.authorizationResponse.value = response
         }
