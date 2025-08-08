@@ -6,13 +6,10 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+// Load keys.properties
 def keysPropertiesFile = rootProject.file("keys.properties")
 def keysProperties = new Properties()
 keysProperties.load(new FileInputStream(keysPropertiesFile))
-
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdk 33
@@ -27,20 +24,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // Removed signingConfig to avoid missing keystore.properties crash
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -62,7 +48,7 @@ android {
 
     applicationVariants.all { variant ->
         buildConfigField "String", "SPOTIFY_CLIENT_ID", "\"${keysProperties['spotifyClientId']}\""
-        buildConfigField  "String", "SPOTIFY_CLIENT_SECRET", "\"${keysProperties['spotifyClientSecret']}\""
+        buildConfigField "String", "SPOTIFY_CLIENT_SECRET", "\"${keysProperties['spotifyClientSecret']}\""
     }
 }
 
